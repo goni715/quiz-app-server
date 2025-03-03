@@ -3,8 +3,8 @@ import { registerUserService } from "./user.service"
 
 
 
-const registerUser = (req: Request, res: Response) => {
-   const result = registerUserService();
+const registerUser = async (req: Request, res: Response) => {
+   const result = await registerUserService(req.body);
    res.status(201).json({
      success: true,
      data: result
