@@ -6,7 +6,7 @@ import config from "../../config";
 
 
 
-const registerUser = catchAsync(async (req: Request, res: Response) => {
+const registerUser = catchAsync(async (req, res) => {
    const result = await registerUserService(req.body);
    sendResponse(res, {
      statusCode: 201,
@@ -17,7 +17,7 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 })
 
 
-const loginUser = catchAsync(async (req: Request, res: Response) => {
+const loginUser = catchAsync(async (req, res) => {
   const result = await loginUserService(req.body);
   const { accessToken, refreshToken} = result;
   
