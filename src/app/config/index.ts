@@ -5,5 +5,10 @@ dotenv.config({ path: path.join(process.cwd(), '.env') });
 
 export default {
     database_url: process.env.DATABASE_URL,
-    port: 9090
+    port: 9090,
+    bcrypt_salt_rounds: process.env.BCRPYT_SALT_ROUNDS,
+    jwt_access_secret: process.env.JWT_ACCESS_SECRET,
+    jwt_refresh_secret: process.env.JWT_REFRESH_SECRET,
+    jwt_access_expires_in: process.env.JWT_ACCESS_EXPIRES_IN,
+    jwt_refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN,
 }
