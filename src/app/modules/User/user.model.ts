@@ -11,6 +11,7 @@ const userSchema = new Schema<IUser>({
     email: {
         type: String,
         required: true,
+        unique: true,
         trim: true
     },
     country: {
@@ -27,7 +28,17 @@ const userSchema = new Schema<IUser>({
         type: String,
         required: true,
     }
+}, {
+    timestamps: true,
+    versionKey: false
 })
+
+
+
+
+
+
+
 
 const UserModel = model<IUser>('User', userSchema);
 export default UserModel;

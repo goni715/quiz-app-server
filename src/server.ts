@@ -1,34 +1,45 @@
-import { Server } from "http";
 import app from "./app";
+import config from "./app/config";
+import { Server } from "http";
 import dbConnect from "./app/utils/dbConnect";
 
-const port = 5000;
+let server: Server;
+
 
 async function main() {
-  await dbConnect();
-  const server: Server = app.listen(port, () => {
-    console.log(`server running at ${port} port`);
-  });
+    try {
+      await dbConnect();
+      server = app.listen(config.port, () => {
+        console.log(`Example app listening on port ${config.port}`);
+      });
 
-  const exitHandler = () => {
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+  main();
+
+
+
+  //asynchronous code error
+  process.on('unhandledRejection', (err)=>{
+    console.log(`❤❤ unahandledRejection is detected , shutting down ...`, err);
     if(server){
-      server.close(()=> {
-        console.log('Server closed');
+      server.close(()=>{
+        process.exit(1);
       })
     }
     process.exit(1)
-  }
-
-
-  process.on('uncaughtException', (error)=> {
-    console.log(error);
-    exitHandler();
   })
 
-  process.on('unhandledRejection', (error)=> {
-    console.log(error);
-    exitHandler();
-  })
-}
 
-main();
+
+  //synchronous code error--process immediately off
+  process.on('uncaughtException', () => {
+    console.log(`😛😛 uncaughtException is detected , shutting down ...`);
+    process.exit(1);
+  });
+
+
+ 
