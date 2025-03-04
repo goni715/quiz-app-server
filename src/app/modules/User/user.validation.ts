@@ -20,3 +20,11 @@ export const registerUserSchema = z.object({
     }).min(6, 'Password must be 6 characters long')
         .trim()
 })
+
+export const loginUserSchema = z.object({
+    email: z.string().email(),
+    password: z.string({
+        required_error: "Password is required"
+    }).min(6, 'Password must be 6 characters long')
+        .trim()
+})
