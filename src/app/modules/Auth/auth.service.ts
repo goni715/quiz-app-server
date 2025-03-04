@@ -6,6 +6,7 @@ import UserModel from "../User/user.model";
 import { ILoginUser } from "./auth.interface";
 import createToken, { TExpiresIn } from "../../utils/createToken";
 import config from "../../config";
+import OtpModel from "./otp.model";
 
 
 const registerUserService = async (payload: IUser) => {
@@ -50,6 +51,12 @@ const forgotPassVerifyEmailService = async (email: string) => {
     if(!user){
         throw new AppError(404, `Couldn't find this email address`);
     }
+
+    const otp = Math.floor(1000 + Math.random() * 9000);
+    
+    //insert the otp
+    await OtpModel.create({ email, otp });
+
 }
 
 
