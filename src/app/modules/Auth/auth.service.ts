@@ -3,11 +3,12 @@ import AppError from "../../errors/AppError";
 import checkPassword from "../../utils/checkPassword";
 import { IUser } from "../User/user.interface";
 import UserModel from "../User/user.model";
-import { ILoginUser, IVerifyOTp } from "./auth.interface";
+import { ILoginUser, INewPassword, IVerifyOTp } from "./auth.interface";
 import createToken, { TExpiresIn } from "../../utils/createToken";
 import config from "../../config";
 import OtpModel from "./otp.model";
 import sendEmailUtility from "../../utils/sendEmailUtility";
+import hashedPassword from "../../utils/hashedPassword";
 
 
 const registerUserService = async (payload: IUser) => {
@@ -108,10 +109,48 @@ const forgotPassVerifyOtpService = async (payload: IVerifyOTp) => {
 
 
 
+//step-03
+const forgotPassCreateNewPassService = async (payload: INewPassword) => {
+  const { email, otp, password} = payload;
+  const user = await UserModel.findOne({ email });
+  if (!user) {
+    throw new AppError(404, `Couldn't find this email address`);
+  }
+
+      //check otp exist
+      const OtpExist = await OtpModel.findOne({ email, otp, status: 1 });
+      if (!OtpExist) {
+        throw new AppError(404, `Invalid Otp Code`);
+      }
+  
+  
+      
+      //Database Third Process
+      //check otp is expired
+      const OtpExpired = await OtpModel.findOne({
+          email,
+          otp,
+          status:1,
+          otpExpires: { $gt: new Date(Date.now()) },
+        });
+  
+  
+        if (!OtpExpired) {
+          throw new AppError(404, `This Otp Code is expired`);
+        }
+
+         //update the password
+        const hashPass = await hashedPassword(password);//hashedPassword
+        const result = await UserModel.updateOne({email: email},{password: hashPass})
+
+      return result;
+}
+
 
 export {
     registerUserService,
     loginUserService,
     forgotPassVerifyEmailService,
-    forgotPassVerifyOtpService
+    forgotPassVerifyOtpService,
+    forgotPassCreateNewPassService
 }

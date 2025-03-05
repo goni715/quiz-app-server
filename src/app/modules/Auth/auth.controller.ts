@@ -1,7 +1,7 @@
 import config from "../../config";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import { forgotPassVerifyEmailService, forgotPassVerifyOtpService, loginUserService, registerUserService } from "./auth.service";
+import { forgotPassCreateNewPassService, forgotPassVerifyEmailService, forgotPassVerifyOtpService, loginUserService, registerUserService } from "./auth.service";
 
 
 
@@ -66,6 +66,17 @@ const forgotPassVerifyOtp = catchAsync(async (req, res) => {
  });
 
 
+ //step-03
+const forgotPassCreateNewPass = catchAsync(async (req, res) => {
+  const result = await forgotPassCreateNewPassService(req.body);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Password is reset successfully",
+    data: result
+  })
+});
+
 
 
 
@@ -74,6 +85,7 @@ const forgotPassVerifyOtp = catchAsync(async (req, res) => {
   registerUser,
   loginUser,
   forgotPassVerifyEmail,
-  forgotPassVerifyOtp
+  forgotPassVerifyOtp,
+  forgotPassCreateNewPass
  }
  
