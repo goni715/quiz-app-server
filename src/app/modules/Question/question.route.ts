@@ -1,9 +1,11 @@
 import express from 'express';
-import { createQuestion } from './question.controller';
+import { createQuestion, deleteQuestion } from './question.controller';
 
 const router = express.Router();
 
 router.post('/create-question', createQuestion);
+router.delete('/delete-question/:questionId', deleteQuestion);
+
 
 
 export const QuestionRoutes = router;

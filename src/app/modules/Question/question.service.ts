@@ -1,14 +1,44 @@
+import slugify from "slugify"
 import { IQuestion } from "./question.interface"
 import QuestionModel from "./question.model"
+import AppError from "../../errors/AppError";
+import { Types } from "mongoose";
 
 
 const createQuestionService = async (payload: IQuestion) => {
-    await QuestionModel.create(payload)
-    return "success"
+    const slug = slugify(payload.question);
+    
+    //check question is already existed
+    const question = await QuestionModel.findOne({ slug: slug.toLowerCase() });
+    if(question){
+        throw new AppError(409, 'Question is already existed');
+    }
+
+    const result = await QuestionModel.create({
+        ...payload,
+        slug: slug.toLowerCase()
+    });
+
+
+    return result;
+}
+
+const deleteQuestionService = async (questionId: string) => {
+    
+    const ObjectId = Types.ObjectId;
+    //check questionId doesn't exist
+    const question = await QuestionModel.findById(questionId);
+    if(!question) {
+        throw new AppError(404, `This questionId doesn't exist`);
+    } 
+
+    const result = QuestionModel.deleteOne({ _id: new ObjectId(questionId) });
+    return result;
+
 }
 
 
-
 export {
-    createQuestionService
+    createQuestionService,
+    deleteQuestionService
 }
