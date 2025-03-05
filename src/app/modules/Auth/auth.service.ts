@@ -7,6 +7,7 @@ import { ILoginUser } from "./auth.interface";
 import createToken, { TExpiresIn } from "../../utils/createToken";
 import config from "../../config";
 import OtpModel from "./otp.model";
+import sendEmailUtility from "../../utils/sendEmailUtility";
 
 
 const registerUserService = async (payload: IUser) => {
@@ -21,7 +22,7 @@ const registerUserService = async (payload: IUser) => {
 
 
 const loginUserService = async (payload: ILoginUser) => {
-    const user = await UserModel.findOne({ email: payload.email });
+    const user = await UserModel.findOne({ email: payload.email }).select('+password');
     if(!user){
         throw new AppError(404, `Couldn't find this email address`);
     }
@@ -31,6 +32,9 @@ const loginUserService = async (payload: ILoginUser) => {
     if(!isPasswordMatch){
         throw new AppError(400, 'Password is not correct');
     }
+
+
+
 
     //create accessToken
     const accessToken = createToken({email: user.email, id: String(user._id)}, config.jwt_access_secret as Secret, config.jwt_access_expires_in as TExpiresIn);
@@ -56,6 +60,12 @@ const forgotPassVerifyEmailService = async (email: string) => {
     
     //insert the otp
     await OtpModel.create({ email, otp });
+
+
+    //send otp to the email address
+    await sendEmailUtility(email, String(otp))
+
+    return null;
 
 }
 

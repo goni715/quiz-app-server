@@ -44,7 +44,7 @@ const forgotPassVerifyEmail = catchAsync(async (req, res) => {
     sendResponse(res, {
       statusCode: 200,
       success: true,
-      message: "Email is verified successfully",
+      message: "Email is verified & Otp is sent successfully",
       data: result
     })
  });

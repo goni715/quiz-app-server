@@ -5,12 +5,14 @@ import dbConnect from "./app/utils/dbConnect";
 
 let server: Server;
 
+const port = config.port || 9090;
+
 
 async function main() {
     try {
       await dbConnect();
-      server = app.listen(config.port, () => {
-        console.log(`Example app listening on port ${config.port}`);
+      server = app.listen(port, () => {
+        console.log(`Example app listening on port ${port}`);
       });
 
     } catch (error) {
