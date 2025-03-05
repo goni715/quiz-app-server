@@ -1,7 +1,7 @@
 import config from "../../config";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import { forgotPassVerifyEmailService, loginUserService, registerUserService } from "./auth.service";
+import { forgotPassVerifyEmailService, forgotPassVerifyOtpService, loginUserService, registerUserService } from "./auth.service";
 
 
 
@@ -38,22 +38,42 @@ const loginUser = catchAsync(async (req, res) => {
  })
 })
 
+
+
+//forgot-password
+//step-01
 const forgotPassVerifyEmail = catchAsync(async (req, res) => {
-    const { email } = req.body;
-    const result = await forgotPassVerifyEmailService(email);
+  const { email } = req.body;
+  const result = await forgotPassVerifyEmailService(email);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Email is verified & Otp is sent successfully",
+    data: result
+  })
+});
+
+
+//step-02
+const forgotPassVerifyOtp = catchAsync(async (req, res) => {
+    const result = await forgotPassVerifyOtpService(req.body);
     sendResponse(res, {
       statusCode: 200,
       success: true,
-      message: "Email is verified & Otp is sent successfully",
+      message: "Otp is verified successfully",
       data: result
     })
  });
 
 
 
+
+
+
  export {
   registerUser,
   loginUser,
-  forgotPassVerifyEmail
+  forgotPassVerifyEmail,
+  forgotPassVerifyOtp
  }
  

@@ -35,3 +35,15 @@ export const forgotPassVerifyEmailSchema = z.object({
         required_error: "Email is required"
     }).email().trim()
 })
+
+
+export const forgotPassVerifyOtpSchema = z.object({
+    email: z.string({
+        required_error: "Email is required"
+    }).email().trim(),
+    otp: z.string({
+        required_error: "Otp is required"
+    }).min(4, 'otp must be 4 characters long')
+    .max(4, 'otp must be 4 characters long')
+        .trim()
+})
