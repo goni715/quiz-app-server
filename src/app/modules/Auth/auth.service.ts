@@ -38,9 +38,9 @@ const loginUserService = async (payload: ILoginUser) => {
 
 
     //create accessToken
-    const accessToken = createToken({ email: user.email, id: String(user._id) }, config.jwt_access_secret as Secret, config.jwt_access_expires_in as TExpiresIn);
+    const accessToken = createToken({ email: user.email, id: String(user._id), role: user.role }, config.jwt_access_secret as Secret, config.jwt_access_expires_in as TExpiresIn);
     //create refreshToken
-    const refreshToken = createToken({ email: user.email, id: String(user._id) }, config.jwt_refresh_secret as Secret, config.jwt_refresh_expires_in as TExpiresIn);
+    const refreshToken = createToken({ email: user.email, id: String(user._id), role: user.role }, config.jwt_refresh_secret as Secret, config.jwt_refresh_expires_in as TExpiresIn);
 
     return {
         accessToken,
@@ -69,9 +69,9 @@ const loginAdminService = async (payload: ILoginUser) => {
 
 
   //create accessToken
-  const accessToken = createToken({ email: user.email, id: String(user._id) }, config.jwt_access_secret as Secret, config.jwt_access_expires_in as TExpiresIn);
+  const accessToken = createToken({ email: user.email, id: String(user._id), role: user.role}, config.jwt_access_secret as Secret, config.jwt_access_expires_in as TExpiresIn);
   //create refreshToken
-  const refreshToken = createToken({ email: user.email, id: String(user._id) }, config.jwt_refresh_secret as Secret, config.jwt_refresh_expires_in as TExpiresIn);
+  const refreshToken = createToken({ email: user.email, id: String(user._id), role: user.role }, config.jwt_refresh_secret as Secret, config.jwt_refresh_expires_in as TExpiresIn);
 
   return {
       accessToken,
