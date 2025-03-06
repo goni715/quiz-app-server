@@ -34,7 +34,7 @@ export const loginUserSchema = z.object({
 });
 
 
-export const forgotPassVerifyEmailSchema = z.object({
+export const forgotPassSendOtpSchema = z.object({
   email: z
     .string({
       required_error: "Email is required",

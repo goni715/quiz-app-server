@@ -51,7 +51,7 @@ const loginUserService = async (payload: ILoginUser) => {
 
 //forgot password
 // step-01
-const forgotPassVerifyEmailService = async (email: string) => {
+const forgotPassSendOtpService = async (email: string) => {
     const user = await UserModel.findOne({ email });
     if (!user) {
         throw new AppError(404, `Couldn't find this email address`);
@@ -150,7 +150,7 @@ const forgotPassCreateNewPassService = async (payload: INewPassword) => {
 export {
     registerUserService,
     loginUserService,
-    forgotPassVerifyEmailService,
+    forgotPassSendOtpService,
     forgotPassVerifyOtpService,
     forgotPassCreateNewPassService
 }

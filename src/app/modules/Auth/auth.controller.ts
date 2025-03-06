@@ -1,7 +1,7 @@
 import config from "../../config";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import { forgotPassCreateNewPassService, forgotPassVerifyEmailService, forgotPassVerifyOtpService, loginUserService, registerUserService } from "./auth.service";
+import { forgotPassCreateNewPassService, forgotPassSendOtpService, forgotPassVerifyOtpService, loginUserService, registerUserService } from "./auth.service";
 
 
 
@@ -42,9 +42,9 @@ const loginUser = catchAsync(async (req, res) => {
 
 //forgot-password
 //step-01
-const forgotPassVerifyEmail = catchAsync(async (req, res) => {
+const forgotPassSendOtp = catchAsync(async (req, res) => {
   const { email } = req.body;
-  const result = await forgotPassVerifyEmailService(email);
+  const result = await forgotPassSendOtpService(email);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -84,7 +84,7 @@ const forgotPassCreateNewPass = catchAsync(async (req, res) => {
  export {
   registerUser,
   loginUser,
-  forgotPassVerifyEmail,
+  forgotPassSendOtp,
   forgotPassVerifyOtp,
   forgotPassCreateNewPass
  }
