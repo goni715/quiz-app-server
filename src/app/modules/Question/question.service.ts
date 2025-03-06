@@ -44,8 +44,19 @@ const getAllQuestionService = async () => {
 }
 
 
+const getSingleQuestionService = async (questionId: string) => {
+    const question = await QuestionModel.findById(questionId);
+    if(!question) {
+        throw new AppError(404, `This questionId doesn't exist`);
+    } 
+
+    return question;
+}
+
+
 export {
     createQuestionService,
     deleteQuestionService,
-    getAllQuestionService
+    getAllQuestionService,
+    getSingleQuestionService
 }
