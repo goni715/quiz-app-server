@@ -38,7 +38,14 @@ const deleteQuestionService = async (questionId: string) => {
 }
 
 
+const getAllQuestionService = async () => {
+    const result = await QuestionModel.find()
+    return result;
+}
+
+
 export {
     createQuestionService,
-    deleteQuestionService
+    deleteQuestionService,
+    getAllQuestionService
 }

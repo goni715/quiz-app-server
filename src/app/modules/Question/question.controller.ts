@@ -1,6 +1,6 @@
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import { createQuestionService, deleteQuestionService } from "./question.service";
+import { createQuestionService, deleteQuestionService, getAllQuestionService } from "./question.service";
 
 
 const createQuestion = catchAsync(async (req, res) => {
@@ -27,8 +27,19 @@ const createQuestion = catchAsync(async (req, res) => {
   })
 
 
+  const getAllQuestion = catchAsync(async (req, res) => {
+    const result = await getAllQuestionService();
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Questions are retrieved successfully",
+      data: result
+    })
+  })
+
 
 export {
     createQuestion,
-    deleteQuestion
+    deleteQuestion,
+    getAllQuestion
 }
