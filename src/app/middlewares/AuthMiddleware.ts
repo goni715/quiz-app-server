@@ -28,7 +28,6 @@ const AuthMiddleware = (...roles: TUserRole[]) => {
         config.jwt_access_secret as Secret
       );
 
-      console.log(decoded);
 
       //check if role is matching
       if (roles.length > 0 && !roles.includes(decoded.role)) {

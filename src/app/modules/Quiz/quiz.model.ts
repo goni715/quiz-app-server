@@ -1,10 +1,10 @@
 import { model, Schema } from "mongoose";
-import { IQuestion } from "./question.interface";
+import { IQuiz } from "./quiz.interface";
 
 
-const questionSchema = new Schema<IQuestion>(
+const quizSchema = new Schema<IQuiz>(
   {
-    question: {
+    quiz: {
       type: String,
       required: true,
       unique: true,
@@ -45,5 +45,5 @@ const questionSchema = new Schema<IQuestion>(
 
 
 
-const QuestionModel = model<IQuestion>('Querstion', questionSchema);
-export default QuestionModel;
+const QuizModel = model<IQuiz>('Quiz', quizSchema);
+export default QuizModel;

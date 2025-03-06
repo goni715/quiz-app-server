@@ -1,12 +1,12 @@
 import { z } from "zod";
 
-export const createQuestionSchema = z
+export const createQuizSchema = z
   .object({
-    question: z
+    quiz: z
       .string({
-        required_error: "Question is required",
+        required_error: "Quiz is required",
       })
-      .min(1, "Question is required")
+      .min(1, "Quiz is required")
       .trim(),
     options: z.array(z.string()).min(2, "There must be at least two options"),
     answer: z.string({

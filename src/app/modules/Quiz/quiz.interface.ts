@@ -1,8 +1,8 @@
 
 
 
-export interface IQuestion {
-    question: string;
+export interface IQuiz {
+    quiz: string;
     slug: string;
     options: string[];
     answer: string;
