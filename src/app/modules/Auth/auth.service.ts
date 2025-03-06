@@ -49,6 +49,36 @@ const loginUserService = async (payload: ILoginUser) => {
 }
 
 
+const loginAdminService = async (payload: ILoginUser) => {
+  const user = await UserModel.findOne({ email: payload.email }).select('+password');
+  if (!user) {
+      throw new AppError(404, `Couldn't find this email address`);
+  }
+
+  //check you are not admin
+  if(user.role !=="admin"){
+    throw new AppError(400, `Sorry! You are not admin`);
+  }
+
+  //check password
+  const isPasswordMatch = await checkPassword(payload.password, user.password);
+  if (!isPasswordMatch) {
+      throw new AppError(400, 'Password is not correct');
+  }
+
+
+
+  //create accessToken
+  const accessToken = createToken({ email: user.email, id: String(user._id) }, config.jwt_access_secret as Secret, config.jwt_access_expires_in as TExpiresIn);
+  //create refreshToken
+  const refreshToken = createToken({ email: user.email, id: String(user._id) }, config.jwt_refresh_secret as Secret, config.jwt_refresh_expires_in as TExpiresIn);
+
+  return {
+      accessToken,
+      refreshToken
+  }
+}
+
 //forgot password
 // step-01
 const forgotPassSendOtpService = async (email: string) => {
@@ -150,6 +180,7 @@ const forgotPassCreateNewPassService = async (payload: INewPassword) => {
 export {
     registerUserService,
     loginUserService,
+    loginAdminService,
     forgotPassSendOtpService,
     forgotPassVerifyOtpService,
     forgotPassCreateNewPassService

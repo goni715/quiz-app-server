@@ -1,12 +1,14 @@
 import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
 import { forgotPassCreateNewPassSchema, forgotPassSendOtpSchema, forgotPassVerifyOtpSchema, loginUserSchema, registerUserSchema } from './auth.validation';
-import { forgotPassCreateNewPass, forgotPassSendOtp, forgotPassVerifyOtp, loginUser, registerUser } from './auth.controller';
+import { forgotPassCreateNewPass, forgotPassSendOtp, forgotPassVerifyOtp, loginAdmin, loginUser, registerUser } from './auth.controller';
 
 const router = express.Router();
 
 router.post('/register-user', validateRequest(registerUserSchema), registerUser);
 router.post('/login-user', validateRequest(loginUserSchema), loginUser);
+router.post('/login-admin', validateRequest(loginUserSchema), loginAdmin);
+
 //firgot-password
 router.post('/forgot-pass-send-otp', validateRequest(forgotPassSendOtpSchema), forgotPassSendOtp);
 router.post('/forgot-pass-verify-otp', validateRequest(forgotPassVerifyOtpSchema), forgotPassVerifyOtp);

@@ -6,6 +6,7 @@ export interface IUser {
     country: string;
     university: string;
     profession: string;
-    password: string
+    password: string;
+    role: 'user' | 'admin';
 }
 

@@ -1,7 +1,7 @@
 import config from "../../config";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import { forgotPassCreateNewPassService, forgotPassSendOtpService, forgotPassVerifyOtpService, loginUserService, registerUserService } from "./auth.service";
+import { forgotPassCreateNewPassService, forgotPassSendOtpService, forgotPassVerifyOtpService, loginAdminService, loginUserService, registerUserService } from "./auth.service";
 
 
 
@@ -38,7 +38,26 @@ const loginUser = catchAsync(async (req, res) => {
  })
 })
 
-
+const loginAdmin = catchAsync(async (req, res) => {
+  const result = await loginAdminService(req.body);
+  const { accessToken, refreshToken} = result;
+  
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,  // Prevents client-side access to the cookie (more secure)
+    secure: config.node_env === "production", // Only use HTTPS in production
+    maxAge: 7 * 24 * 60 * 60 * 1000, // Expires in 7 day
+    sameSite: "strict", // Prevents CSRF attacks
+  });
+ 
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Admin is logged in successfully",
+    data: {
+      accessToken
+    }
+  })
+ })
 
 //forgot-password
 //step-01
@@ -84,6 +103,7 @@ const forgotPassCreateNewPass = catchAsync(async (req, res) => {
  export {
   registerUser,
   loginUser,
+  loginAdmin,
   forgotPassSendOtp,
   forgotPassVerifyOtp,
   forgotPassCreateNewPass
