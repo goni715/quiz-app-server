@@ -3,6 +3,7 @@ import QuizModel from "./quiz.model"
 import AppError from "../../errors/AppError";
 import { Types } from "mongoose";
 import { IQuiz } from "./quiz.interface";
+import pickValidFields from "../../utils/pickValidFields";
 
 
 const createQuizService = async (payload: IQuiz) => {

@@ -1,5 +1,7 @@
 import catchAsync from "../../utils/catchAsync";
+import pickValidFields from "../../utils/pickValidFields";
 import sendResponse from "../../utils/sendResponse";
+import { QuizValidFields } from "./quiz.constant";
 import { createQuizService, deleteQuizService, getAllQuizService, getSingleQuizService } from "./quiz.service";
 
 
@@ -28,7 +30,8 @@ const createQuiz = catchAsync(async (req, res) => {
 
 
   const getAllQuiz = catchAsync(async (req, res) => {
-    const result = await getAllQuizService();
+    const validatedQuery = pickValidFields(req.query, QuizValidFields);
+    const result = await getAllQuizService(validatedQuery);
     sendResponse(res, {
       statusCode: 200,
       success: true,
