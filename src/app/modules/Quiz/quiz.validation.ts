@@ -12,6 +12,9 @@ export const createQuizSchema = z
     answer: z.string({
       required_error: "Answer is required",
     }),
+    explanation: z.string({
+      required_error: "Answer is required",
+    }),
   })
   .superRefine((values, ctx) => {
     const { options, answer } = values;

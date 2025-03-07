@@ -36,6 +36,10 @@ const quizSchema = new Schema<IQuiz>(
         message: "Answer must be one of the provided options.",
       },
     },
+    explanation: {
+      type: String,
+      required: true
+    }
   },
   {
     timestamps: true,

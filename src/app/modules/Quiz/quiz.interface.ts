@@ -6,4 +6,5 @@ export interface IQuiz {
     slug: string;
     options: string[];
     answer: string;
+    explanation: string;
 }
