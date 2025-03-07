@@ -16,14 +16,4 @@ export type TQuizQuery = {
     limit?: string;
     sortBy?: string;
     sortOrder?: 'asc' | 'desc';
-    name?: string;
-    email?: string;
-    contactNumber?: string;
-    address?: string;
-    registrationNumber?: string;
-    gender?: 'male' | 'female';
-    qualification?: string;
-    currentWorkingPlace?: string;
-    designation?: string;
-    specialties?: string;
   };
