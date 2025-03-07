@@ -3,6 +3,7 @@ import { UserRoutes } from '../modules/User/user.route';
 import { AuthRoutes } from '../modules/Auth/auth.route';
 import { QuizRoutes } from '../modules/Quiz/quiz.route';
 import { SummaryRoutes } from '../modules/Summary/summary.route';
+import { InfoRoutes } from '../modules/Info/info.route';
 
 const router = express.Router();
 
@@ -23,6 +24,10 @@ const moduleRoutes = [
     {
         path: '/summary',
         route: SummaryRoutes
+    },
+    {
+        path: '/info',
+        route: InfoRoutes
     }
 ]
 
