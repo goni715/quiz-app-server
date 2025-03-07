@@ -24,9 +24,9 @@ const createQuiz = catchAsync(async (req, res) => {
       statusCode: 200,
       success: true,
       message: "Quiz is deleted successfully",
-      data: result
-    })
-  })
+      data: result,
+    });
+  });
 
 
   const getAllQuiz = catchAsync(async (req, res) => {

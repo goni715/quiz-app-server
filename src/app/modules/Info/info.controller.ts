@@ -1,6 +1,6 @@
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import { createInfoService } from "./info.service";
+import { createInfoService, deleteInfoService } from "./info.service";
 
 
 
@@ -15,4 +15,16 @@ const createInfo = catchAsync(async (req, res) => {
   });
 });
 
-export { createInfo };
+
+const deleteInfo = catchAsync(async (req, res) => {
+  const infoId = req.params.infoId;
+  const result = await deleteInfoService(infoId);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Info is deleted successfully",
+    data: result
+  })
+})
+
+export { createInfo, deleteInfo };

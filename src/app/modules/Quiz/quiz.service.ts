@@ -3,7 +3,6 @@ import QuizModel from "./quiz.model"
 import AppError from "../../errors/AppError";
 import { Types } from "mongoose";
 import { IQuiz, TQuizQuery } from "./quiz.interface";
-import pickValidFields from "../../utils/pickValidFields";
 import { QuizSearchFields } from "./quiz.constant";
 import { makeSearchQuery } from "../../helper/QueryBuilder";
 
@@ -34,7 +33,7 @@ const deleteQuizService = async (quizId: string) => {
         throw new AppError(404, `This quizId doesn't exist`);
     } 
 
-    const result = QuizModel.deleteOne({ _id: new ObjectId(quizId) });
+    const result = await QuizModel.deleteOne({ _id: new ObjectId(quizId) });
     return result;
 
 }
