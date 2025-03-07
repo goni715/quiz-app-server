@@ -29,5 +29,6 @@ const getFriends = catchAsync(async (req, res) => {
 
 
 export {
+    getSuggestedUsers,
     getFriends
 }
