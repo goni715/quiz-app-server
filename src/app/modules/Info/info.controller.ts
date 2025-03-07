@@ -1,6 +1,8 @@
 import catchAsync from "../../utils/catchAsync";
+import pickValidFields from "../../utils/pickValidFields";
 import sendResponse from "../../utils/sendResponse";
-import { createInfoService, deleteInfoService } from "./info.service";
+import { InfoValidFields } from "./info.constant";
+import { createInfoService, deleteInfoService, getAllInfoService } from "./info.service";
 
 
 
@@ -27,4 +29,17 @@ const deleteInfo = catchAsync(async (req, res) => {
   })
 })
 
-export { createInfo, deleteInfo };
+const getAllInfo = catchAsync(async (req, res) => {
+  const validatedQuery = pickValidFields(req.query, InfoValidFields);
+  const result = await getAllInfoService(validatedQuery);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Informations are retrieved successfully",
+    meta: result.meta,
+    data: result.data
+  })
+})
+
+
+export { createInfo, deleteInfo, getAllInfo };

@@ -11,9 +11,9 @@ export interface IQuiz {
 
 
 export type TQuizQuery = {
-    searchTerm?: string;
-    page?: string;
-    limit?: string;
-    sortBy?: string;
-    sortOrder?: 'asc' | 'desc';
-  };
+  searchTerm?: string;
+  page?: string;
+  limit?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+};

@@ -7,8 +7,5 @@ export const QuizValidFields: string[] = [
   "page",
   "limit",
   "sortBy",
-  "sortOrder",
-  "quiz",
-  "answer",
-  "explanation",
+  "sortOrder"
 ];
