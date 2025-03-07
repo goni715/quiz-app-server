@@ -1,7 +1,9 @@
 import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
-import { forgotPassCreateNewPassSchema, forgotPassSendOtpSchema, forgotPassVerifyOtpSchema, loginUserSchema, registerUserSchema } from './auth.validation';
-import { forgotPassCreateNewPass, forgotPassSendOtp, forgotPassVerifyOtp, loginAdmin, loginUser, registerUser } from './auth.controller';
+import { changePasswordSchema, forgotPassCreateNewPassSchema, forgotPassSendOtpSchema, forgotPassVerifyOtpSchema, loginUserSchema, registerUserSchema } from './auth.validation';
+import { changePassword, forgotPassCreateNewPass, forgotPassSendOtp, forgotPassVerifyOtp, loginAdmin, loginUser, registerUser } from './auth.controller';
+import AuthMiddleware from '../../middlewares/AuthMiddleware';
+import { UserRole } from '../User/user.constant';
 
 const router = express.Router();
 
@@ -14,6 +16,7 @@ router.post('/forgot-pass-send-otp', validateRequest(forgotPassSendOtpSchema), f
 router.post('/forgot-pass-verify-otp', validateRequest(forgotPassVerifyOtpSchema), forgotPassVerifyOtp);
 router.post('/forgot-pass-create-new-pass', validateRequest(forgotPassCreateNewPassSchema), forgotPassCreateNewPass);
 
+router.put('/change-password', AuthMiddleware(UserRole.admin, UserRole.user), validateRequest(changePasswordSchema), changePassword);
 
 
 

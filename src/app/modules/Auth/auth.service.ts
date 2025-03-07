@@ -182,7 +182,7 @@ const changePasswordService = async (loginUserId: string, payload: IChangePass) 
   const { currentPassword, newPassword } = payload;
   const ObjectId = Types.ObjectId;
 
-  const user = await UserModel.findById(loginUserId);
+  const user = await UserModel.findById(loginUserId).select('+password');
 
   //checking if the password is not correct
   const isPasswordMatched = await checkPassword(

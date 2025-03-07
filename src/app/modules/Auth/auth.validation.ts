@@ -19,7 +19,7 @@ export const registerUserSchema = z.object({
     .string({
       required_error: "Password is required",
     })
-    .min(6, "Password must be 6 characters long")
+    .min(6, "Password minimum 6 characters long")
     .trim(),
     role: z.enum(["user", "admin"], {
       errorMap: () => ({ message: "{VALUE} is not supported" }),
@@ -32,7 +32,7 @@ export const loginUserSchema = z.object({
     .string({
       required_error: "Password is required",
     })
-    .min(6, "Password must be 6 characters long")
+    .min(6, "Password minimum 6 characters long")
     .trim(),
 });
 
@@ -82,6 +82,23 @@ export const forgotPassCreateNewPassSchema = z.object({
     .string({
       required_error: "Password is required",
     })
-    .min(6, "Password must be 6 characters long")
+    .min(6, "Password minimum 6 characters long")
     .trim(),
+});
+
+
+
+export const changePasswordSchema = z.object({
+  currentPassword: z
+    .string({
+      required_error: "Current Password is required",
+    })
+    .min(6, "CurrePassword minimum 6 characters long")
+    .trim(),
+    newPassword: z
+    .string({
+      required_error: "New Password is required",
+    })
+    .min(6, "New Password minimum 6 characters long")
+    .trim()
 });
