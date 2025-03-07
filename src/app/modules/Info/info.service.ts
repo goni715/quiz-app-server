@@ -30,9 +30,6 @@ const createInfoService = async (payload: IInfo) => {
 
 
 
-
-
-
 const deleteInfoService = async (infoId: string) => {
 
     const ObjectId = Types.ObjectId;
@@ -105,9 +102,24 @@ const getAllInfoService = async (query: TInfoQuery) => {
 }
 
 
+const updateInfoService = async (infoId: string, payload: Partial<IInfo>) => {
+
+    const ObjectId = Types.ObjectId;
+    //check infoId doesn't exist
+    const info = await InfoModel.findById(infoId);
+    if(!info) {
+        throw new AppError(404, `This infoId doesn't exist`);
+    } 
+
+    const result = await InfoModel.updateOne({ _id: new ObjectId(infoId)}, payload);
+    return result;
+}
+
+
 
 export {
     createInfoService,
     deleteInfoService,
-    getAllInfoService
+    getAllInfoService,
+    updateInfoService
 }
