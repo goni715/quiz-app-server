@@ -23,3 +23,8 @@ export interface INewPassword {
     otp: string;
     password: string
 }
+
+export interface IChangePass {
+    currentPassword: string;
+    newPassword: string;
+}

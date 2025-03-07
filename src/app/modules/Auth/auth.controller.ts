@@ -1,7 +1,7 @@
 import config from "../../config";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import { forgotPassCreateNewPassService, forgotPassSendOtpService, forgotPassVerifyOtpService, loginAdminService, loginUserService, registerUserService } from "./auth.service";
+import { changePasswordService, forgotPassCreateNewPassService, forgotPassSendOtpService, forgotPassVerifyOtpService, loginAdminService, loginUserService, registerUserService } from "./auth.service";
 
 
 
@@ -98,6 +98,17 @@ const forgotPassCreateNewPass = catchAsync(async (req, res) => {
 
 
 
+const changePassword = catchAsync(async (req, res) => {
+  const loginUserId = req.headers.id;
+  const result = await changePasswordService(loginUserId as string, req.body);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Password is updated successfully",
+    data: result
+  })
+});
+
 
 
  export {
@@ -106,6 +117,7 @@ const forgotPassCreateNewPass = catchAsync(async (req, res) => {
   loginAdmin,
   forgotPassSendOtp,
   forgotPassVerifyOtp,
-  forgotPassCreateNewPass
+  forgotPassCreateNewPass,
+  changePassword
  }
  

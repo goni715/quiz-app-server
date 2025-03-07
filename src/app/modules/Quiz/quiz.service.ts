@@ -96,9 +96,22 @@ const getAllQuizService = async (query: TQuizQuery) => {
     const result = await QuizModel.find(finalQuery)
     .skip(skip)
     .limit(Number(limit))
-    .sort({[sortBy]: sorting})
+    .sort({[sortBy]: sorting});
 
-    return result;
+
+    // 7. Get total count for pagination
+    const total = await QuizModel.countDocuments(finalQuery);
+    const totalPages = Math.ceil(total / Number(limit));
+
+    return {
+        meta: {
+            page: Number(page),
+            limit: Number(limit),
+            totalPages,
+            total,
+        },
+        data: result
+    };
 }
 
 

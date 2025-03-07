@@ -15,4 +15,7 @@ router.post('/forgot-pass-verify-otp', validateRequest(forgotPassVerifyOtpSchema
 router.post('/forgot-pass-create-new-pass', validateRequest(forgotPassCreateNewPassSchema), forgotPassCreateNewPass);
 
 
+
+
+
 export const AuthRoutes = router;

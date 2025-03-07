@@ -3,12 +3,13 @@ import AppError from "../../errors/AppError";
 import checkPassword from "../../utils/checkPassword";
 import { IUser } from "../User/user.interface";
 import UserModel from "../User/user.model";
-import { ILoginUser, INewPassword, IVerifyOTp } from "./auth.interface";
+import { IChangePass, ILoginUser, INewPassword, IVerifyOTp } from "./auth.interface";
 import createToken, { TExpiresIn } from "../../utils/createToken";
 import config from "../../config";
 import OtpModel from "./otp.model";
 import sendEmailUtility from "../../utils/sendEmailUtility";
 import hashedPassword from "../../utils/hashedPassword";
+import { Types } from "mongoose";
 
 
 const registerUserService = async (payload: IUser) => {
@@ -177,11 +178,42 @@ const forgotPassCreateNewPassService = async (payload: INewPassword) => {
 }
 
 
+const changePasswordService = async (loginUserId: string, payload: IChangePass) => {
+  const { currentPassword, newPassword } = payload;
+  const ObjectId = Types.ObjectId;
+
+  const user = await UserModel.findById(loginUserId);
+
+  //checking if the password is not correct
+  const isPasswordMatched = await checkPassword(
+    currentPassword,
+    user?.password as string
+  ); 
+
+  if(!isPasswordMatched){
+    throw new AppError(400, 'Current Password is not correct');
+  }
+
+   //hash the newPassword
+   const hashPass = await hashedPassword(newPassword);
+
+   //update the password
+   const result = await UserModel.updateOne(
+     { _id: new ObjectId(loginUserId) },
+     { password: hashPass }
+   );
+   
+   return result;
+
+}
+
+
 export {
     registerUserService,
     loginUserService,
     loginAdminService,
     forgotPassSendOtpService,
     forgotPassVerifyOtpService,
-    forgotPassCreateNewPassService
+    forgotPassCreateNewPassService,
+    changePasswordService
 }
