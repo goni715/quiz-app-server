@@ -59,7 +59,7 @@ const getAllQuizService = async (query: TQuizQuery) => {
         sortBy=SortField
      }
 
-     const sorting = sortOrder === 'asc' ? 1 : -1 ;
+     const sortDirection = sortOrder === 'asc' ? 1 : -1 ;
    
 
     
@@ -95,7 +95,7 @@ const getAllQuizService = async (query: TQuizQuery) => {
     const result = await QuizModel.find(finalQuery)
     .skip(skip)
     .limit(Number(limit))
-    .sort({[sortBy]: sorting});
+    .sort({[sortBy]: sortDirection});
 
 
     // 7. Get total count for pagination

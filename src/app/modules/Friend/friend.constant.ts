@@ -10,5 +10,7 @@ export const FriendValidFields: string[] = [
   "page",
   "limit",
   "sortBy",
-  "sortOrder"
+  "sortOrder",
+  "friendDetails.country",
+  "friendDetails.profession"
 ];

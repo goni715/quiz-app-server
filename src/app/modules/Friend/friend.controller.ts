@@ -27,7 +27,8 @@ const getMyFriends = catchAsync(async (req, res) => {
     statusCode: 200,
     success: true,
     message: "Friends are retrieved successfully",
-    data: result,
+    meta: result.meta,
+    data: result.data
   });
 });
 

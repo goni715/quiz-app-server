@@ -5,7 +5,7 @@ export interface IFriend {
     friends: Types.ObjectId[];
 }
 
-export type TQuizQuery = {
+export type TFriendQuery = {
     searchTerm?: string;
     page?: string;
     limit?: string;
