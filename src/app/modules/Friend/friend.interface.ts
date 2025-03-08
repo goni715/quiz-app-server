@@ -2,5 +2,5 @@ import { Types } from "mongoose";
 
 
 export interface IFriend {
-    members: Types.ObjectId[];
+    friends: Types.ObjectId[];
 }
