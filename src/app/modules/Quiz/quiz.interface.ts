@@ -7,6 +7,7 @@ export interface IQuiz {
     options: string[];
     answer: string;
     explanation: string;
+    readingTime: number; //seconds
 }
 
 
