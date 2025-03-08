@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 import AppError from "../../errors/AppError"
 import FriendModel from "./friend.model"
 import { TFriendQuery } from "./friend.interface";
-import { makeSearchQuery } from "../../helper/QueryBuilder";
+import { makeFilterQuery, makeSearchQuery } from "../../helper/QueryBuilder";
 import { FriendSearchFields } from "./friend.constant";
 
 
@@ -42,7 +42,7 @@ const getMyFriendsService = async (loginUserId: string, query: TFriendQuery) => 
     page = 1, // Default to page 1
     limit = 10, // Default to 10 results per page // Default sort field
     sortOrder = "desc",
-    sortBy= 'createdAt', // Default sort order
+    sortBy = "createdAt", // Default sort order
     ...filters // Any additional filters
   } = query;
 
@@ -50,8 +50,7 @@ const getMyFriendsService = async (loginUserId: string, query: TFriendQuery) => 
   const skip = (Number(page) - 1) * Number(limit);
 
   //3. setup sorting
-  const sortDirection = sortOrder === 'asc' ? 1 : -1 ;
-   
+  const sortDirection = sortOrder === "asc" ? 1 : -1;
 
   //4. setup searching
   let searchQuery = {};
@@ -60,20 +59,13 @@ const getMyFriendsService = async (loginUserId: string, query: TFriendQuery) => 
     searchQuery = makeSearchQuery(searchTerm, FriendSearchFields);
   }
 
-   // 5. Setup filters
-//    let filterQuery: any = {};
+ 
+  //5 setup filters
 
-//    if (country) {
-//      filterQuery["friendDetails.country"] = country;
-//    }
-//    if (profession) {
-//      filterQuery["friendDetails.profession"] = profession;
-//    }
-
-
-   console.log(filters);
-
-
+  let filterQuery = {};
+  if (filters) {
+    filterQuery = makeFilterQuery(filters);
+  }
 
   //check this user is already existed in your friend list
   const result = await FriendModel.aggregate([
@@ -98,7 +90,7 @@ const getMyFriendsService = async (loginUserId: string, query: TFriendQuery) => 
       $unwind: "$friendDetails", // Flatten the friendDetails array
     },
     {
-        $match: searchQuery
+      $match: { ...searchQuery, ...filterQuery }, // Apply search & filter queries
     },
     {
       $project: {
@@ -106,6 +98,7 @@ const getMyFriendsService = async (loginUserId: string, query: TFriendQuery) => 
         fullName: "$friendDetails.fullName",
         email: "$friendDetails.email",
         country: "$friendDetails.country",
+        university: "$friendDetails.university",
         profession: "$friendDetails.profession",
         createdAt: "$createdAt",
       },
@@ -115,50 +108,59 @@ const getMyFriendsService = async (loginUserId: string, query: TFriendQuery) => 
     { $sort: { [sortBy]: sortDirection } }, // Sorting
   ]);
 
-    // 6. Count total friends for pagination
-    const totalFriendsResult = await FriendModel.aggregate([
-        { $match: { friends: { $in: [new ObjectId(loginUserId)] } } },
-        { $unwind: "$friends" },
-        { $match: { friends: { $ne: new ObjectId(loginUserId) } } },
-        {
-          $lookup: {
-            from: "users",
-            localField: "friends",
-            foreignField: "_id",
-            as: "friendDetails",
-          },
-        },
-        { $unwind: "$friendDetails" },
-        { $match: searchQuery },
-        { $count: "totalFriends" }, // Count the total number of matching friends
-      ]);
-    
-      const totalFriends = totalFriendsResult[0]?.totalFriends || 0;
-      const totalPages = Math.ceil(totalFriends / Number(limit));
+  // 6. Count total friends for pagination
+  const totalFriendsResult = await FriendModel.aggregate([
+    { $match: { friends: { $in: [new ObjectId(loginUserId)] } } },
+    { $unwind: "$friends" },
+    { $match: { friends: { $ne: new ObjectId(loginUserId) } } },
+    {
+      $lookup: {
+        from: "users",
+        localField: "friends",
+        foreignField: "_id",
+        as: "friendDetails",
+      },
+    },
+    { $unwind: "$friendDetails" },
+    { $match: { ...searchQuery, ...filterQuery } }, // Apply search & filter queries
+    { $count: "totalFriends" }, // Count the total number of matching friends
+  ]);
 
-      return {
-        meta: {
-            page: Number(page), //currentPage
-            limit: Number(limit),
-            totalPages,
-            total:totalFriends,
-        },
-        data: result
-    };
+  const totalFriends = totalFriendsResult[0]?.totalFriends || 0;
+  const totalPages = Math.ceil(totalFriends / Number(limit));
 
-  //searchQuery 
-//   {
-//     $match: searchQuery
-//         ? {
-//             $or: [
-//                 { "friendDetails.fullName": { $regex: searchQuery, $options: "i" } },
-//                 { "friendDetails.email": { $regex: searchQuery, $options: "i" } }
-//             ]
-//         }
-//         : {}
-//   }
+  return {
+    meta: {
+      page: Number(page), //currentPage
+      limit: Number(limit),
+      totalPages,
+      total: totalFriends,
+    },
+    data: result,
+  };
+
+  //searchQuery
+  //   {
+  //     $match: searchQuery
+  //         ? {
+  //             $or: [
+  //                 { "friendDetails.fullName": { $regex: searchQuery, $options: "i" } },
+  //                 { "friendDetails.email": { $regex: searchQuery, $options: "i" } }
+  //             ]
+  //         }
+  //         : {}
+  //   }
 
 
+   // 5. Setup filters
+  //    let filterQuery: any = {};
+
+  //    if (country) {
+  //      filterQuery["friendDetails.country"] = country;
+  //    }
+  //    if (profession) {
+  //      filterQuery["friendDetails.profession"] = profession;
+  //    }
 
 }
 

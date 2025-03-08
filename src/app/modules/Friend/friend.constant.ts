@@ -2,6 +2,7 @@ export const FriendSearchFields = [
   "friendDetails.fullName",
   "friendDetails.email",
   "friendDetails.country",
+  "friendDetails.university",
   "friendDetails.profession"
 ];
 
@@ -12,5 +13,6 @@ export const FriendValidFields: string[] = [
   "sortBy",
   "sortOrder",
   "friendDetails.country",
+  "friendDetails.university",
   "friendDetails.profession"
 ];

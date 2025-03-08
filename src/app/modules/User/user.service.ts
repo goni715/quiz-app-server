@@ -51,6 +51,7 @@ const getSuggestedUsersService = async (loginUserId: string) => {
             fullName: "$fullName",
             email: "$email",
             country: "$country",
+            university: "$university",
             profession: "$profession",
             role: "$role",
             createdAt: "$createdAt"

@@ -19,3 +19,17 @@ export const makeSearchQuery = (searchTerm: string, SearchFields: string[]) => {
     return searchQuery;
     
 }
+
+
+export const makeFilterQuery = (filters: Record<string, string>) => {
+  let filterQuery: any = {};
+
+  Object.keys(filters).forEach((key) => {
+    if (filters[key]) {
+      filterQuery[key] = filters[key];
+    }
+  });
+
+   return filterQuery;
+
+};

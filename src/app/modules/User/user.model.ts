@@ -20,6 +20,11 @@ const userSchema = new Schema<IUser>({
         required: true,
         trim: true
     },
+    university: {
+        type: String,
+        required: true,
+        trim: true
+    },
     profession: {
         type: String,
         required: true,
