@@ -46,6 +46,7 @@ const getMyFriendsService = async (loginUserId: string, query: TFriendQuery) => 
     ...filters // Any additional filters
   } = query;
 
+
   // 2. Set up pagination
   const skip = (Number(page) - 1) * Number(limit);
 
