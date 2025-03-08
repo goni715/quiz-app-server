@@ -1,5 +1,7 @@
 import catchAsync from "../../utils/catchAsync";
+import pickValidFields from "../../utils/pickValidFields";
 import sendResponse from "../../utils/sendResponse";
+import { FriendValidFields } from "./friend.constant";
 import { getMyFriendsService, makeFriendService } from "./friend.service";
 
 
@@ -19,8 +21,8 @@ const makeFriend = catchAsync(async (req, res) => {
 
 const getMyFriends = catchAsync(async (req, res) => {
   const loginUserId = req.headers.id;
-
-  const result = await getMyFriendsService(loginUserId as string);
+  const validatedQuery = pickValidFields(req.query, FriendValidFields);
+  const result = await getMyFriendsService(loginUserId as string, validatedQuery);
   sendResponse(res, {
     statusCode: 200,
     success: true,

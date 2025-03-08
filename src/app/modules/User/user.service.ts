@@ -32,17 +32,28 @@ const getSuggestedUsersService = async (loginUserId: string) => {
 
     const friendIds = data.length > 0 ? data[0].friendIds : [];
 
-    return friendIds;
-    
+
+
    const result = await UserModel.aggregate([
     {
         $match: {
             _id : {
-                $ne: new ObjectId(loginUserId)
+                $nin: [...friendIds, new ObjectId(loginUserId)]
             },
             role: {
                 $ne: 'admin'
             }
+        }
+    },
+    {
+        $project: {
+            _id: "$_id",
+            fullName: "$fullName",
+            email: "$email",
+            country: "$country",
+            profession: "$profession",
+            role: "$role",
+            createdAt: "$createdAt"
         }
     }
    ])
@@ -50,29 +61,8 @@ const getSuggestedUsersService = async (loginUserId: string) => {
    return result;
 }
 
-
-
-const getFriendsService = async (loginUserId: string) => {
-    const ObjectId = Types.ObjectId;
-
-   const result = await UserModel.aggregate([
-    {
-        $match: {
-            _id : {
-                $ne: new ObjectId(loginUserId)
-            },
-            role: {
-                $ne: 'admin'
-            }
-        }
-    }
-   ])
-
-   return result;
-}
 
 
 export {
     getSuggestedUsersService,
-    getFriendsService
 }
