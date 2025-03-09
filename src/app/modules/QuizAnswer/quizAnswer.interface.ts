@@ -8,3 +8,4 @@ export interface IQuizAnswer {
     selectedOption: string;
     isCorrect: boolean;
 }
+

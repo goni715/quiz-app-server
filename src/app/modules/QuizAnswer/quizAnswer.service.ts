@@ -2,8 +2,12 @@ import { IQuizAnswer } from "./quizAnswer.interface"
 
 
 
-const submitQuizAnswerService = async (payload: IQuizAnswer) => {
-    return payload
+const submitQuizAnswerService = async (loginUserId: string, friendId: string, quizId: string) => {
+    return {
+        loginUserId,
+        friendId,
+        quizId
+    }
 }
 
 
