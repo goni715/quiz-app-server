@@ -4,11 +4,12 @@ import { createGameSessionService } from "./gameSession.service";
 
 const createGameSession = catchAsync(async (req, res) => {
   const loginUserId = req.headers.id;
-  const { friendId } = req.body;
+  const { friendId, quizId } = req.body;
 
   const result = await createGameSessionService(
     loginUserId as string,
-    friendId
+    friendId,
+    quizId
   );
   sendResponse(res, {
     statusCode: 201,

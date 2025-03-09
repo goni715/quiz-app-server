@@ -15,6 +15,9 @@ export const createQuizSchema = z
     explanation: z.string({
       required_error: "Answer is required",
     }),
+    readingTime: z
+      .number({ required_error: "readingTime is required" })
+      .positive("Reading time must be a positive number"),
   })
   .superRefine((values, ctx) => {
     const { options, answer } = values;

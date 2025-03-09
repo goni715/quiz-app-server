@@ -1,8 +1,9 @@
 import { model, Schema } from "mongoose";
-import { IQuizAttempt } from "./quizAttempt.interface";
+import { IQuizAnswer } from "./quizAnswer.interface";
 
-const quizAttemptSchema = new Schema<IQuizAttempt>(
+const quizAnswerSchema = new Schema<IQuizAnswer>(
   {
+    gameSessionId: { type: Schema.Types.ObjectId, ref: "GameSession", required: true },
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -28,5 +29,5 @@ const quizAttemptSchema = new Schema<IQuizAttempt>(
   }
 );
 
-const QuizAttemptModel = model("QuizAttempt", quizAttemptSchema);
-export default QuizAttemptModel;
+const QuizAnswerModel = model("QuizAnswer", quizAnswerSchema);
+export default QuizAnswerModel;

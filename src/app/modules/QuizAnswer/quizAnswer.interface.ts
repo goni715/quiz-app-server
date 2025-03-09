@@ -1,7 +1,8 @@
 import { Types } from "mongoose";
 
 
-export interface IQuizAttempt {
+export interface IQuizAnswer {
+    gameSessionId: Types.ObjectId;
     userId: Types.ObjectId;
     quizId: Types.ObjectId;
     selectedOption: string;
