@@ -11,6 +11,12 @@ const createGameSessionService = async (
   friendId: string,
   quizId: string
 ) => {
+
+  if (loginUserId === friendId) {
+    throw new AppError(409, "This friendId is your id");
+  }
+
+
   const user = await UserModel.findById(friendId);
   if (!user) {
     throw new AppError(404, "User not found with this friendId");
@@ -24,6 +30,7 @@ const createGameSessionService = async (
   if (!friend) {
     throw new AppError(404, "This friendId is not existed in your friend list");
   }
+
 
   const quiz = await QuizModel.findById(quizId);
   if (!quiz) {
@@ -50,4 +57,14 @@ const createGameSessionService = async (
   return newGameSession;
 };
 
-export { createGameSessionService };
+
+const getMyGameSessionsService = async (loginUserId: string) => {
+  const result = await GameSessionModel.find({
+    players: {$in : [loginUserId]}
+  })
+
+  return result;
+   
+}
+
+export { createGameSessionService, getMyGameSessionsService };
