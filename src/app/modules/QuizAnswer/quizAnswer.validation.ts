@@ -1,14 +1,14 @@
 import { z } from "zod";
 
 export const submitQuizAnswerSchema = z.object({
-  friendId: z
+  gameSessionId: z
     .string({
-      required_error: "friendId is required",
+      required_error: "gameSessionId is required",
     })
     .trim(),
   quizId: z
     .string({
-      required_error: "friendId is required",
+      required_error: "quiId is required",
     })
     .trim(),
   selectedOption: z

@@ -11,10 +11,6 @@ export const HistoryValidFields: string[] = [
   "limit",
   "sortBy",
   "sortOrder",
-  "isCorrect",
-  "price",
-  "quizDetails.quiz",
-  "quizDetails.answer",
-  "quizDetails.explanation"
+  "isCorrect"
 ];
   

@@ -1,9 +1,6 @@
-import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import AppError from "../../errors/AppError";
-import FriendModel from "../Friend/friend.model";
 import GameSessionModel from "../GameSession/gameSession.model";
 import QuizModel from "../Quiz/quiz.model";
-import UserModel from "../User/user.model";
 import { ISubmitAnswer } from "./quizAnswer.interface";
 import QuizAnswerModel from "./quizAnswer.model";
 import { Types } from "mongoose";
@@ -13,26 +10,14 @@ import { HistorySearchFields } from "./quizAnswer.constant";
 
 
 const submitQuizAnswerService = async (
-  loginUserId: string,
+  loginUserId : string,
   payload: ISubmitAnswer
 ) => {
 
-  const { friendId, quizId, selectedOption, responseTime} = payload;
-
-  const user = await UserModel.findById(friendId);
-  if (!user) {
-    throw new AppError(404, "User not found with this friendId");
-  }
+  console.log(payload);
 
 
-   //check this user is not already existed in your friend list
-   const friend = await FriendModel.findOne({
-    friends: { $all: [loginUserId, friendId] },
-  });
-
-  if (!friend) {
-    throw new AppError(404, "This friendId is not existed in your friend list");
-  }
+  const { gameSessionId, quizId, selectedOption, responseTime} = payload;
 
 
   const quiz = await QuizModel.findById(quizId);
@@ -42,7 +27,8 @@ const submitQuizAnswerService = async (
 
   //check gameSession doesn't exist
   const gameSession = await GameSessionModel.findOne({
-    players: { $all: [loginUserId, friendId] },
+    _id: gameSessionId,
+    players: { $in: [loginUserId] },
     quiz: quizId,
   });
 
@@ -82,6 +68,8 @@ const submitQuizAnswerService = async (
 
 
   return result;
+
+
 
 };
 
@@ -178,6 +166,9 @@ const getMyQuizHistoryService = async (loginUserId: string, query:any) => {
       $unwind: "$quizDetails"
     },
     {
+      $match: { ...searchQuery, ...filterQuery }, // Apply search & filter queries
+    },
+    {
       $project: {
         _id: "$quizId",
         quiz: "$quizDetails.quiz",
@@ -211,8 +202,46 @@ const getMyQuizHistoryService = async (loginUserId: string, query:any) => {
 }
 
 
+const calculateXPService = async (gameSessionId: string) => {
+  if (!Types.ObjectId.isValid(gameSessionId)) {
+    throw new AppError(400, "Invalid game session ID");
+  }
+
+  const gameSession = await GameSessionModel.findById(gameSessionId);
+  if (!gameSession) {
+    throw new AppError(404, "gameSession does not exist");
+  }
+
+  const totalQuizzes = gameSession.quizzes.length;
+
+  // Count how many quiz answers exist for this game session
+  const quizAnswers = await QuizAnswerModel.aggregate([
+    { $match: { gameSessionId: new Types.ObjectId(gameSessionId) } },
+    {
+      $group: {
+        _id: "$quizId",
+        uniquePlayers: { $addToSet: "$userId" }, // Collect unique players for each quiz
+      },
+    },
+    {
+      $match: {
+        $expr: { $eq: [{ $size: "$uniquePlayers" }, 2] }, // Ensure both players have answered
+      },
+    },
+  ]);
+
+  const completedQuizzes = quizAnswers.length;
+  if (completedQuizzes !== totalQuizzes) {
+    throw new AppError(400, "All quizzes must be submitted by both players");
+  }
+
+  return quizAnswers;
+};
+
+
 export {
     submitQuizAnswerService,
     getQuizResultsService,
-    getMyQuizHistoryService
+    getMyQuizHistoryService,
+    calculateXPService
 }

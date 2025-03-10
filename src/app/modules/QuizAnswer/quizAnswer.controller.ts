@@ -3,13 +3,12 @@ import pickValidFields from "../../utils/pickValidFields";
 import sendResponse from "../../utils/sendResponse";
 import { HistoryValidFields } from "./quizAnswer.constant";
 import { IType } from "./quizAnswer.interface";
-import { getMyQuizHistoryService, getQuizResultsService, submitQuizAnswerService } from "./quizAnswer.service";
+import { calculateXPService, getMyQuizHistoryService, getQuizResultsService, submitQuizAnswerService } from "./quizAnswer.service";
 
 
 
 const submitQuizAnswer = catchAsync(async (req, res) => {
   const loginUserId = req.headers.id;
-
     const result = await submitQuizAnswerService(loginUserId as string, req.body);
     sendResponse(res, {
       statusCode: 201,
@@ -45,8 +44,28 @@ const getMyQuizHistory = catchAsync(async (req, res) => {
 })
 
 
+
+const calculateXP = catchAsync(async (req, res) => {
+  const loginUserId = req.headers.id;
+  const { gameSessionId } = req.params;
+  const { status } = req.body;
+
+  const result = await calculateXPService(
+    gameSessionId
+  );
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "XP is calculated successfully",
+    data: result,
+  });
+});
+
+
+
 export {
     submitQuizAnswer,
     getQuizResults,
-    getMyQuizHistory
+    getMyQuizHistory,
+    calculateXP
 }

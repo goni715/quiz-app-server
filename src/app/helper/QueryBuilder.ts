@@ -26,12 +26,14 @@ export const makeFilterQuery = (filters: Record<string, string>) => {
 
   Object.keys(filters).forEach((key) => {
     let value = filters[key];
-
-    if (filters[key]) {
-      if (value === "true" || value === "false") {
-        //boolean value handled
-        filterQuery[key] = Boolean(value);
+    
+      if (value === "true") {
+        filterQuery[key] = true;
       }
+      else if (value === "false") {
+        filterQuery[key] = false;
+      }
+
 
       // Convert numeric strings to actual numbers
       else if (!isNaN(Number(value))) {
@@ -41,7 +43,7 @@ export const makeFilterQuery = (filters: Record<string, string>) => {
       else {
         filterQuery[key] = value;
       }
-    }
+    
   });
 
   return filterQuery;

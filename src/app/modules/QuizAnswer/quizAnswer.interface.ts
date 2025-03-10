@@ -12,7 +12,7 @@ export interface IQuizAnswer {
 
 
 export interface ISubmitAnswer {
-    friendId: Types.ObjectId;
+    gameSessionId: Types.ObjectId;
     quizId: Types.ObjectId;
     selectedOption: string;
     responseTime: number;
