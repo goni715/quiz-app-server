@@ -39,6 +39,10 @@ const userSchema = new Schema<IUser>({
         type: String,
         enum: ['user', 'admin'],
         default: 'user'
+    },
+    xp: {
+        type: Number,
+        default: 0
     }
 }, {
     timestamps: true,

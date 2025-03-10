@@ -8,6 +8,8 @@ export interface IQuiz {
     answer: string;
     explanation: string;
     readingTime: number; //seconds
+    point: number;
+    condition: string;
 }
 
 

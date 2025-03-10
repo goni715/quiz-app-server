@@ -16,5 +16,7 @@ export const submitQuizAnswerSchema = z.object({
       required_error: "seletedOption is required",
     })
     .trim(),
-  xp: z.number({ required_error: "xp is required" })
+  responseTime: z
+    .number({ required_error: "responseTime is required" })
+    .positive("Reading time must be a positive number"),
 });

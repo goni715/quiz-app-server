@@ -19,6 +19,7 @@ const registerUserService = async (payload: IUser) => {
     }
 
     const result = await UserModel.create(payload);
+    result.password=''
     return result;
 }
 

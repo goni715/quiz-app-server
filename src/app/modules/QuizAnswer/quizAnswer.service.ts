@@ -6,6 +6,7 @@ import QuizModel from "../Quiz/quiz.model";
 import UserModel from "../User/user.model";
 import { ISubmitAnswer } from "./quizAnswer.interface";
 import QuizAnswerModel from "./quizAnswer.model";
+import { Types } from "mongoose";
 
 
 
@@ -14,7 +15,7 @@ const submitQuizAnswerService = async (
   payload: ISubmitAnswer
 ) => {
 
-  const { friendId, quizId, selectedOption, xp } = payload;
+  const { friendId, quizId, selectedOption, responseTime} = payload;
 
   const user = await UserModel.findById(friendId);
   if (!user) {
@@ -74,7 +75,7 @@ const submitQuizAnswerService = async (
     quizId: quiz._id,
     selectedOption,
     isCorrect,
-    xp
+    responseTime
   });
 
 
@@ -122,7 +123,60 @@ const getQuizResultsService = async (type: "weekly" | "monthly") => {
 }
 
 
+const getMyQuizHistoryService = async (loginUserId: string, query:any) => {
+
+  const ObjectId = Types.ObjectId;
+  const result = await QuizAnswerModel.aggregate([
+    {
+      $match: { userId: new ObjectId(loginUserId) }
+    },
+    {
+      $lookup: {
+        from: "quizzes", 
+        localField: "quizId", 
+        foreignField: "_id",
+        as: "quizDetails"
+      }
+    },
+    {
+      $unwind: "$quizDetails"
+    },
+    {
+      $project: {
+        _id: "$quizId",
+        quiz: "$quizDetails.quiz",
+        options: "$quizDetails.options",
+        answer: "$quizDetails.answer",
+        explanation: "$quizDetails.explanation",
+        createdAt: "$quizDetails.createdAt",
+        isCorrect:1
+      }
+    }
+
+    //you want to show these field without renaming the field name
+    // {
+    //   $project: {
+    //     _id: 1,
+    //     quizId: 1,
+    //     selectedOption: 1,
+    //     isCorrect: 1,
+    //     responseTime: 1,
+    //     createdAt: 1,
+    //     "quizDetails.quiz": 1,
+    //     "quizDetails.options": 1,
+    //     "quizDetails.answer": 1,
+    //     "quizDetails.explanation": 1,
+    //   }
+    // }
+  ])
+
+
+  return result;
+}
+
+
 export {
     submitQuizAnswerService,
-    getQuizResultsService
+    getQuizResultsService,
+    getMyQuizHistoryService
 }

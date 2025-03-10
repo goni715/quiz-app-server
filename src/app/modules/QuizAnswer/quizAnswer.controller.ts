@@ -1,7 +1,7 @@
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { IType } from "./quizAnswer.interface";
-import { getQuizResultsService, submitQuizAnswerService } from "./quizAnswer.service";
+import { getMyQuizHistoryService, getQuizResultsService, submitQuizAnswerService } from "./quizAnswer.service";
 
 
 
@@ -22,7 +22,7 @@ const getQuizResults = catchAsync(async (req, res) => {
   const { type } = req.params;
     const result = await getQuizResultsService(type as IType);
     sendResponse(res, {
-      statusCode: 201,
+      statusCode: 200,
       success: true,
       message: "Quiz result retrieved successfully",
       data: result
@@ -30,7 +30,20 @@ const getQuizResults = catchAsync(async (req, res) => {
 })
 
 
+const getMyQuizHistory = catchAsync(async (req, res) => {
+  const loginUserId = req.headers.id;
+    const result = await getMyQuizHistoryService(loginUserId as string, req.query);
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Quiz History retrieved successfully",
+      data: result
+    })
+})
+
+
 export {
     submitQuizAnswer,
-    getQuizResults
+    getQuizResults,
+    getMyQuizHistory
 }

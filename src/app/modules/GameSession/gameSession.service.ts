@@ -57,6 +57,7 @@ const createGameSessionService = async (
   return newGameSession;
 };
 
+// one by one quiz answer // there will be no friend checking
 
 const getMyGameSessionsService = async (loginUserId: string) => {
   const result = await GameSessionModel.find({

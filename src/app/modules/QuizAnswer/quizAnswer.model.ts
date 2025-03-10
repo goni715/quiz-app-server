@@ -22,9 +22,9 @@ const quizAnswerSchema = new Schema<IQuizAnswer>(
       type: Boolean,
       required: true,
     },
-    xp: {
+    responseTime: {
       type: Number,
-      required: true,
+      required: true
     }
   },
   {

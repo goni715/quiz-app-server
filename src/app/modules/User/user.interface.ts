@@ -8,6 +8,7 @@ export interface IUser {
     profession: string;
     password: string;
     role: 'user' | 'admin';
+    xp: number;
 }
 
 

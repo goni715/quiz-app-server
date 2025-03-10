@@ -7,7 +7,7 @@ export interface IQuizAnswer {
     quizId: Types.ObjectId;
     selectedOption: string;
     isCorrect: boolean;
-    xp: number;
+    responseTime: number; //seconds
 }
 
 
@@ -15,7 +15,7 @@ export interface ISubmitAnswer {
     friendId: Types.ObjectId;
     quizId: Types.ObjectId;
     selectedOption: string;
-    xp: number; 
+    responseTime: number;
 }
 
 

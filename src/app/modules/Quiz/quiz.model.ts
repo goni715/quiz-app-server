@@ -43,6 +43,14 @@ const quizSchema = new Schema<IQuiz>(
     readingTime: {
       type: Number,
       required: true
+    },
+    point: {
+      type: Number,
+      required: true
+    },
+    condition: {
+      type: String,
+      required: true
     }
   },
   {

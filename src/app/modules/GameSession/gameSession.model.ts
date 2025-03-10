@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { IGameSession } from "./GameSession.interface";
+import { IGameSession } from "./gameSession.interface";
 
 
 const gameSessionSchema = new Schema<IGameSession>(
@@ -10,7 +10,10 @@ const gameSessionSchema = new Schema<IGameSession>(
       quiz: { type: Schema.Types.ObjectId, ref: "Quiz", required: true }, // Quiz being played
      
     },
-    { timestamps: true }
+    { 
+      timestamps: true,
+      versionKey: false
+    }
   );
 
 
