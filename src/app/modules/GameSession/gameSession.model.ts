@@ -3,18 +3,29 @@ import { IGameSession } from "./gameSession.interface";
 
 
 const gameSessionSchema = new Schema<IGameSession>(
-    {
-      players: [
-        { type: Schema.Types.ObjectId, ref: "User", required: true }
-    ], // Two players
-      quiz: { type: Schema.Types.ObjectId, ref: "Quiz", required: true }, // Quiz being played
-     
+  {
+    players: [{ type: Schema.Types.ObjectId, ref: "User", required: true }], // Two players
+    quizzes: [{
+      type: Schema.Types.ObjectId,
+      ref: "Quiz",
+      required: true,
+    }],
+    receiverId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-    { 
-      timestamps: true,
-      versionKey: false
+    status: {
+      type: String,
+      enum: ["pending", "accepted", "rejected"],
+      default: "pending"
     }
-  );
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  }
+);
 
 
   const GameSessionModel = model<IGameSession>('GameSession', gameSessionSchema);

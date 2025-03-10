@@ -7,6 +7,8 @@ import UserModel from "../User/user.model";
 import { ISubmitAnswer } from "./quizAnswer.interface";
 import QuizAnswerModel from "./quizAnswer.model";
 import { Types } from "mongoose";
+import { makeFilterQuery, makeSearchQuery } from "../../helper/QueryBuilder";
+import { HistorySearchFields } from "./quizAnswer.constant";
 
 
 
@@ -126,6 +128,40 @@ const getQuizResultsService = async (type: "weekly" | "monthly") => {
 const getMyQuizHistoryService = async (loginUserId: string, query:any) => {
 
   const ObjectId = Types.ObjectId;
+
+   // 1. Extract query parameters
+     const {
+       searchTerm, // Text to search
+       page = 1, // Default to page 1
+       limit = 10, // Default to 10 results per page // Default sort field
+       sortOrder = "desc",
+       sortBy = "createdAt", // Default sort order
+       ...filters // Any additional filters
+     } = query;
+   
+   
+     // 2. Set up pagination
+     const skip = (Number(page) - 1) * Number(limit);
+   
+     //3. setup sorting
+     const sortDirection = sortOrder === "asc" ? 1 : -1;
+   
+     //4. setup searching
+     let searchQuery = {};
+   
+     if (searchTerm) {
+       searchQuery = makeSearchQuery(searchTerm, HistorySearchFields);
+     }
+   
+    
+     //5 setup filters
+   
+     let filterQuery = {};
+     if (filters) {
+       filterQuery = makeFilterQuery(filters);
+     }
+
+
   const result = await QuizAnswerModel.aggregate([
     {
       $match: { userId: new ObjectId(loginUserId) }

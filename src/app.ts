@@ -6,6 +6,7 @@ import notFound from "./app/middlewares/notFound";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import bodyParser from "body-parser";
 
+
 const app: Application = express();
 
 app.use(cors())

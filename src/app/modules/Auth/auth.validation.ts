@@ -21,9 +21,11 @@ export const registerUserSchema = z.object({
     })
     .min(6, "Password minimum 6 characters long")
     .trim(),
-    role: z.enum(["user", "admin"], {
+  role: z
+    .enum(["user", "admin"], {
       errorMap: () => ({ message: "{VALUE} is not supported" }),
-    }).default('user')
+    })
+    .default("user"),
 });
 
 export const loginUserSchema = z.object({
