@@ -22,6 +22,10 @@ const quizAnswerSchema = new Schema<IQuizAnswer>(
       type: Boolean,
       required: true,
     },
+    xp: {
+      type: Number,
+      required: true,
+    }
   },
   {
     timestamps: true,

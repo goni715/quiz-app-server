@@ -11,5 +11,5 @@ export const createGameSessionSchema = z.object({
     .string({
       required_error: "friendId is required",
     })
-    .trim(),
+    .trim()
 });

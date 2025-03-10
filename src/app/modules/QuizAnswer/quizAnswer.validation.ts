@@ -11,4 +11,10 @@ export const submitQuizAnswerSchema = z.object({
       required_error: "friendId is required",
     })
     .trim(),
+  selectedOption: z
+    .string({
+      required_error: "seletedOption is required",
+    })
+    .trim(),
+  xp: z.number({ required_error: "xp is required" })
 });
