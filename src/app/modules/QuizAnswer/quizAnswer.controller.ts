@@ -46,13 +46,8 @@ const getMyQuizHistory = catchAsync(async (req, res) => {
 
 
 const calculateXP = catchAsync(async (req, res) => {
-  const loginUserId = req.headers.id;
-  const { gameSessionId } = req.params;
-  const { status } = req.body;
 
-  const result = await calculateXPService(
-    gameSessionId
-  );
+  const result = await calculateXPService(req.body);
   sendResponse(res, {
     statusCode: 200,
     success: true,

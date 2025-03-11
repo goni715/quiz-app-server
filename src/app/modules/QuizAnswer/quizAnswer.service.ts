@@ -1,7 +1,7 @@
 import AppError from "../../errors/AppError";
 import GameSessionModel from "../GameSession/gameSession.model";
 import QuizModel from "../Quiz/quiz.model";
-import { ISubmitAnswer } from "./quizAnswer.interface";
+import { ICalculateXP, ISubmitAnswer, TPlayerXP, TQuizResult, TQuizResults } from "./quizAnswer.interface";
 import QuizAnswerModel from "./quizAnswer.model";
 import { Types } from "mongoose";
 import { makeFilterQuery, makeSearchQuery } from "../../helper/QueryBuilder";
@@ -199,124 +199,128 @@ const getMyQuizHistoryService = async (loginUserId: string, query:any) => {
 }
 
 
-const calculateXPService = async (gameSessionId: string) => {
+const calculateXPService = async (payload: ICalculateXP) => {
+
+  const { quizResults, playersXP } = payload
 
   
 
-  const quizResults = {
-    quiz1Result: [
-        {
-            userId: "67ceb7f91f0adb45a67c9700",
-            quizId: "67cecba4cd8885d418f403ad",
-            isCorrect: true,
-            responseTime: 15,
-            timeLimit: 20,
-            point: 20,
-        },
-        {
-            userId: "67ceb7a50e498c657f204089",
-            quizId: "67cecba4cd8885d418f403ad",
-            isCorrect: false,
-            responseTime: 15,
-            timeLimit: 20,
-            point: 20,
-        },
-    ],
-    quiz2Result: [
-        {
-            userId: "67ceb7a50e498c657f204089",
-            quizId: "67cebd5350c18f87958365aa",
-            isCorrect: true,
-            responseTime: 15,
-            timeLimit: 20,
-            point: 20,
-        },
-        {
-            userId: "67ceb7f91f0adb45a67c9700",
-            quizId: "67cebd5350c18f87958365aa",
-            isCorrect: false,
-            responseTime: 15,
-            timeLimit: 20,
-            point: 20,
-        },
-    ],
+//   const quizResults = {
+//     quiz1Result: [
+//         {
+//             userId: "67ceb7f91f0adb45a67c9700",
+//             quizId: "67cecba4cd8885d418f403ad",
+//             isCorrect: true,
+//             responseTime: 15,
+//             timeLimit: 20,
+//             point: 20,
+//         },
+//         {
+//             userId: "67ceb7a50e498c657f204089",
+//             quizId: "67cecba4cd8885d418f403ad",
+//             isCorrect: false,
+//             responseTime: 15,
+//             timeLimit: 20,
+//             point: 20,
+//         },
+//     ],
+//     quiz2Result: [
+//         {
+//             userId: "67ceb7a50e498c657f204089",
+//             quizId: "67cebd5350c18f87958365aa",
+//             isCorrect: true,
+//             responseTime: 15,
+//             timeLimit: 20,
+//             point: 20,
+//         },
+//         {
+//             userId: "67ceb7f91f0adb45a67c9700",
+//             quizId: "67cebd5350c18f87958365aa",
+//             isCorrect: false,
+//             responseTime: 15,
+//             timeLimit: 20,
+//             point: 20,
+//         },
+//     ],
 
-};
-
-
-const playersXP = [
-{
-  userId: "67ceb7a50e498c657f204089",
-  XP: 500
-},
-{
-  userId: "67ceb7f91f0adb45a67c9700",
-  XP: 300
-}
-]
+// };
 
 
+// const playersXP = [
+// {
+//   userId: "67ceb7a50e498c657f204089",
+//   XP: 500
+// },
+// {
+//   userId: "67ceb7f91f0adb45a67c9700",
+//   XP: 300
+// }
+// ]
 
-function calculateXP(quizResults, playersXP) {
-// Flatten all quiz results into a single array
-const allResults = [].concat(...Object.values(quizResults));
 
-// Create a map for quick lookup of player XP
-const playerMap = new Map(playersXP.map(player => [player.userId, player.XP]));
 
-// Group players by quiz session
-const groupedByQuiz = {};
-allResults.forEach(result => {
-if (!groupedByQuiz[result.quizId]) {
-  groupedByQuiz[result.quizId] = [];
-}
-groupedByQuiz[result.quizId].push(result);
-});
+function calculateXP(quizResults: TQuizResults, playersXP: TPlayerXP[]): TPlayerXP[] {
+  // Flatten all quiz results into a single array
+  const allResults: TQuizResult[] = Object.values(quizResults).flat();
 
-// Process each quiz session
-Object.values(groupedByQuiz).forEach(players => {
-if (players.length !== 2) return; // Ensure we only process two-player matches
+  // Create a map for quick lookup of player XP
+  const playerMap = new Map<string, number>(
+    playersXP.map((player) => [player.userId, player.XP])
+  );
 
-const [player1, player2] = players;
-const player1XP = playerMap.get(player1.userId);
-const player2XP = playerMap.get(player2.userId);
+  // Group players by quiz session
+  const groupedByQuiz: Record<string, TQuizResult[]> = {};
+  allResults.forEach((result) => {
+    if (!groupedByQuiz[result.quizId]) {
+      groupedByQuiz[result.quizId] = [];
+    }
+    groupedByQuiz[result.quizId].push(result);
+  });
 
-const minXP = Math.min(player1XP, player2XP);
-const maxXP = Math.max(player1XP, player2XP);
+  // Process each quiz session
+  Object.values(groupedByQuiz).forEach((players) => {
+    if (players.length !== 2) return; // Ensure we only process two-player matches
 
-let xpAdjustmentFactor = 1;
-if (maxXP > 0) {
-  xpAdjustmentFactor = 1 + (maxXP - minXP) / maxXP; // More XP for fresher player
-}
+    const [player1, player2] = players;
+    const player1XP = playerMap.get(player1.userId) ?? 0;
+    const player2XP = playerMap.get(player2.userId) ?? 0;
 
-let basePoints = 20;
+    const minXP = Math.min(player1XP, player2XP);
+    const maxXP = Math.max(player1XP, player2XP);
 
-// Assign XP based on correctness
-if (player1.isCorrect) {
-  playerMap.set(player1.userId, player1XP + basePoints * (player1XP < player2XP ? xpAdjustmentFactor : 1));
-}
-if (player2.isCorrect) {
-  playerMap.set(player2.userId, player2XP + basePoints * (player2XP < player1XP ? xpAdjustmentFactor : 1));
-}
+    let xpAdjustmentFactor = 1;
+    if (maxXP > 0) {
+      xpAdjustmentFactor = 1 + (maxXP - minXP) / maxXP; // More XP for fresher player
+    }
 
-// Speed bonus: Faster player gets +5 XP
-if (player1.responseTime < player2.responseTime) {
-  playerMap.set(player1.userId, playerMap.get(player1.userId) + 5);
-} else if (player2.responseTime < player1.responseTime) {
-  playerMap.set(player2.userId, playerMap.get(player2.userId) + 5);
-}
-});
+    let basePoints = 20;
 
-// Convert updated XP map back to array format
-return Array.from(playerMap, ([userId, XP]) => ({ userId, XP }));
+    // Assign XP based on correctness
+    if (player1.isCorrect) {
+      playerMap.set(player1.userId, player1XP + basePoints * (player1XP < player2XP ? xpAdjustmentFactor : 1));
+    }
+    if (player2.isCorrect) {
+      playerMap.set(player2.userId, player2XP + basePoints * (player2XP < player1XP ? xpAdjustmentFactor : 1));
+    }
+
+    // Speed bonus: Faster player gets +5 XP
+    if (player1.responseTime < player2.responseTime) {
+      playerMap.set(player1.userId, (playerMap.get(player1.userId) ?? 0) + 5);
+    } else if (player2.responseTime < player1.responseTime) {
+      playerMap.set(player2.userId, (playerMap.get(player2.userId) ?? 0) + 5);
+    }
+  });
+
+  // Convert updated XP map back to array format
+  return Array.from(playerMap, ([userId, XP]) => ({ userId, XP }));
 }
 
 // Example usage:
 const updatedPlayersXP = calculateXP(quizResults, playersXP);
-console.log(updatedPlayersXP);
 
  
-  return "success";
+  return updatedPlayersXP
+
 };
 
 
