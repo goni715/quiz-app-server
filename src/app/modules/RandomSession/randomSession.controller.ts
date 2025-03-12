@@ -2,7 +2,7 @@ import catchAsync from "../../utils/catchAsync";
 import pickValidFields from "../../utils/pickValidFields";
 import sendResponse from "../../utils/sendResponse";
 import { RandomSessionValidFields } from "./randomSession.constant";
-import { acceptRandomPlayerService, createRandomSessionService, getRandomSesssionsService } from "./randomSession.service";
+import { acceptRandomPlayerService, createRandomSessionService, getRandomSesssionsService, removeRandomPlayerService } from "./randomSession.service";
 
 
 const createRandomSession = catchAsync(async (req, res) => {
@@ -48,8 +48,21 @@ const acceptRandomPlayer = catchAsync(async (req, res) => {
   
 
 
+const removeRandomPlayer = catchAsync(async (req, res) => {
+  const { gameSessionId } = req.params;
+  const result = await removeRandomPlayerService(gameSessionId);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Random Player is removed successfully",
+    data: result,
+  });
+});
+
+
 export {
     createRandomSession,
     getRandomSessions,
-    acceptRandomPlayer
+    acceptRandomPlayer,
+    removeRandomPlayer
 }

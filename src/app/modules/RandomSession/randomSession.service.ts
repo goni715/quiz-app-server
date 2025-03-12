@@ -141,6 +141,11 @@ const acceptRandomPlayerService = async (loginUserId: string, gameSessionId: str
 
   const ObjectId = Types.ObjectId;
 
+  const randomGameSession = await RandomSessionModel.findById(gameSessionId);
+  if(!randomGameSession){
+    throw new AppError(404, "This gameSessionId not found");
+  }
+
   const randomSession = await RandomSessionModel.findOne({
     _id: new ObjectId(gameSessionId),
     players: { $in: [loginUserId] },
@@ -166,8 +171,25 @@ const acceptRandomPlayerService = async (loginUserId: string, gameSessionId: str
 
 
 
+const removeRandomPlayerService = async (gameSessionId: string) => {
+  const ObjectId = Types.ObjectId;
+  const randomGameSession = await RandomSessionModel.findById(gameSessionId);
+  if(!randomGameSession){
+    throw new AppError(404, "This gameSessionId not found");
+  }
+
+  const result = await RandomSessionModel.updateOne(
+    { _id: new ObjectId(gameSessionId)},
+    {status: "removed"}
+  )
+
+  return result;
+}
+
+
 export {
     createRandomSessionService,
     getRandomSesssionsService,
-    acceptRandomPlayerService
+    acceptRandomPlayerService,
+    removeRandomPlayerService
 }
