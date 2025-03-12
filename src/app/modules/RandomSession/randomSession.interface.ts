@@ -7,3 +7,15 @@ export interface IRandomSession {
     quizzes: Types.ObjectId[];
     status: TRandomStatus
 }
+
+
+export type TRandomSessionQuery = {
+  searchTerm?: string;
+  page?: string;
+  limit?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+  "player.country"?: string,
+  "player.university"?: string,
+  "player.profession"?: string;
+};
