@@ -4,6 +4,7 @@ import FriendModel from "../Friend/friend.model";
 import QuizModel from "../Quiz/quiz.model";
 import UserModel from "../User/user.model";
 import GameSessionModel from "./gameSession.model";
+import { TSessionStatus } from "./gameSession.interface";
 
 
 
@@ -147,9 +148,11 @@ const updateSessionStatusService = async (loginUserId: string, gameSessionId: st
 
 
 
-const getMyGameSessionsService = async (loginUserId: string) => {
+const getMyGameSessionsService = async (loginUserId: string, status: TSessionStatus) => {
+  
   const result = await GameSessionModel.find({
-    players: {$in : [loginUserId]}
+    players: {$in : [loginUserId]},
+    status
   })
 
   return result;

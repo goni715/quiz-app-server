@@ -14,7 +14,7 @@ router.post('/create-friend-game-session', AuthMiddleware(UserRole.user), valida
 router.post('/create-random-game-session', AuthMiddleware(UserRole.user), validateRequest(createGameSessionSchema), createRandomGameSession);
 router.put('/update-session-status/:gameSessionId', AuthMiddleware(UserRole.user), validateRequest(updateSessionStatusSchema), updateSessionStatus);
 
-router.get('/get-my-game-sessions', AuthMiddleware(UserRole.user), getMyGameSessions);
+router.get('/get-my-game-sessions/:status', AuthMiddleware(UserRole.user), getMyGameSessions);
 
 
 

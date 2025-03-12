@@ -1,5 +1,6 @@
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
+import { TSessionStatus } from "./gameSession.interface";
 import { createFriendGameSessionService, createRandomGameSessionService, getMyGameSessionsService, updateSessionStatusService } from "./gameSession.service";
 
 const createFriendGameSession = catchAsync(async (req, res) => {
@@ -58,7 +59,8 @@ const updateSessionStatus = catchAsync(async (req, res) => {
 
 const getMyGameSessions = catchAsync(async (req, res) => {
   const loginUserId = req.headers.id;
-  const result = await getMyGameSessionsService(loginUserId as string);
+  const { status } = req.params;
+  const result = await getMyGameSessionsService(loginUserId as string, status as TSessionStatus);
   sendResponse(res, {
     statusCode: 200,
     success: true,
