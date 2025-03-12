@@ -20,6 +20,7 @@ const RandomSessionSchema = new Schema<IRandomSession>({
         type: String,
         enum: ['active', 'acceptedd', 'removed'],
         required: true,
+        default: 'active'
     },
 }, 
 { timestamps: true, versionKey: false }

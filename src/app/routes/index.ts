@@ -7,6 +7,7 @@ import { InfoRoutes } from '../modules/Info/info.route';
 import { FriendRoutes } from '../modules/Friend/friend.route';
 import { GameSessionRoutes } from '../modules/GameSession/gameSession.route';
 import { QuizAnswerRoutes } from '../modules/QuizAnswer/quizAnswer.route';
+import { RandomSessionRoutes } from '../modules/RandomSession/randomSession.route';
 
 const router = express.Router();
 
@@ -43,6 +44,10 @@ const moduleRoutes = [
     {
         path: '/game-session',
         route: GameSessionRoutes
+    },
+    {
+        path: '/random-session',
+        route: RandomSessionRoutes
     }
 ]
 
