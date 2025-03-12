@@ -317,7 +317,6 @@ function calculateXP(quizResults: TQuizResults, playersXP: TPlayerXP[]): TPlayer
 
 // Example usage:
 const updatedPlayersXP = calculateXP(quizResults, playersXP);
-console.log(updatedPlayersXP);
 
  
   return updatedPlayersXP
