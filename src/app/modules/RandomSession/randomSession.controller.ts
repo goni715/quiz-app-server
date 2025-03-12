@@ -2,7 +2,7 @@ import catchAsync from "../../utils/catchAsync";
 import pickValidFields from "../../utils/pickValidFields";
 import sendResponse from "../../utils/sendResponse";
 import { RandomSessionValidFields } from "./randomSession.constant";
-import { createRandomSessionService, getRandomSesssionsService } from "./randomSession.service";
+import { acceptRandomPlayerService, createRandomSessionService, getRandomSesssionsService } from "./randomSession.service";
 
 
 const createRandomSession = catchAsync(async (req, res) => {
@@ -30,10 +30,26 @@ const getRandomSessions = catchAsync(async (req, res) => {
     data: result.data
   });
 });
+
+
+
+
+const acceptRandomPlayer = catchAsync(async (req, res) => {
+  const loginUserId = req.headers.id;
+  const { gameSessionId } = req.params;
+  const result = await acceptRandomPlayerService(loginUserId as string, gameSessionId);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Random Player is accepted successfully",
+    data: result,
+  });
+});
   
 
 
 export {
     createRandomSession,
-    getRandomSessions
+    getRandomSessions,
+    acceptRandomPlayer
 }

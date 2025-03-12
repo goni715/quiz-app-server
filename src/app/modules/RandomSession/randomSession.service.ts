@@ -4,6 +4,7 @@ import RandomSessionModel from "./randomSession.model";
 import { TRandomSessionQuery } from "./randomSession.interface";
 import { makeFilterQuery, makeSearchQuery } from "../../helper/QueryBuilder";
 import { RandomSessionSearchFields } from "./randomSession.constant";
+import AppError from "../../errors/AppError";
 
 
 
@@ -79,6 +80,17 @@ const getRandomSesssionsService = async ( loginUserId: string, query: TRandomSes
       {
         $match: { ...searchQuery, ...filterQuery }, // Apply search & filter queries
       },
+      {
+        $project: {
+          gameSessionId: "$_id",
+          _id:0,
+          playerId: "$player._id",
+          playerName: "$player.fullName",
+          playerEmail: "$player.email",
+          status: "$status",
+          createdAt: "$createdAt",
+        }
+      },
       { $skip: skip }, // Pagination - Skip the previous pages
       { $limit: Number(limit) }, // Pagination - Limit the number of results
       { $sort: { [sortBy]: sortDirection } }, // Sorting
@@ -125,7 +137,37 @@ const getRandomSesssionsService = async ( loginUserId: string, query: TRandomSes
 }
 
 
+const acceptRandomPlayerService = async (loginUserId: string, gameSessionId: string) => {
+
+  const ObjectId = Types.ObjectId;
+
+  const randomSession = await RandomSessionModel.findOne({
+    _id: new ObjectId(gameSessionId),
+    players: { $in: [loginUserId] },
+    status: "active"
+  });
+
+  if(randomSession){
+    throw new AppError(400, "You have no access to update the status")
+  }
+
+
+  const result = await RandomSessionModel.updateOne(
+    { _id: new ObjectId(gameSessionId) },
+    {
+      $push: { players: new Types.ObjectId(loginUserId) },
+      $set: { status: "accepted" },
+    }
+  );
+
+
+  return result;
+}
+
+
+
 export {
     createRandomSessionService,
-    getRandomSesssionsService
+    getRandomSesssionsService,
+    acceptRandomPlayerService
 }

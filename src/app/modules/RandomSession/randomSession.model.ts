@@ -18,7 +18,7 @@ const RandomSessionSchema = new Schema<IRandomSession>({
     }],
     status: {
         type: String,
-        enum: ['active', 'acceptedd', 'removed'],
+        enum: ['active', 'accepted', 'removed'],
         required: true,
         default: 'active'
     },
