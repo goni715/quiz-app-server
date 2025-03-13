@@ -317,8 +317,13 @@ function calculateXP(quizResults: TQuizResults, playersXP: TPlayerXP[]): TPlayer
 // Example usage:
 const updatedPlayersXP = calculateXP(quizResults, playersXP);
 
- 
-  return updatedPlayersXP
+
+const arr = Object.values(quizResults).flat()
+const data = arr.map(({ timeLimit, point, ...rest }) => rest);
+
+  //insertMany data
+  const result = await QuizAnswerModel.insertMany(data);
+  return result
 
 };
 

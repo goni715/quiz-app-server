@@ -1,5 +1,6 @@
 import AppError from "../../errors/AppError";
 import QuizModel from "../Quiz/quiz.model"
+import ReviewModel from "./review.model";
 
 
 const addToReviewService = async (loginUserId: string, quizId: string) => {
@@ -8,6 +9,10 @@ const addToReviewService = async (loginUserId: string, quizId: string) => {
     if(!quiz){
         throw new AppError(404, "Quiz not found")
     }
+
+    const result = await ReviewModel
+
+
     return {
         loginUserId,
         quizId
