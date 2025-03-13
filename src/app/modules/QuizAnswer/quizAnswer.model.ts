@@ -3,7 +3,6 @@ import { IQuizAnswer } from "./quizAnswer.interface";
 
 const quizAnswerSchema = new Schema<IQuizAnswer>(
   {
-    gameSessionId: { type: Schema.Types.ObjectId, ref: "GameSession", required: true },
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -25,6 +24,10 @@ const quizAnswerSchema = new Schema<IQuizAnswer>(
     responseTime: {
       type: Number,
       required: true
+    },
+    review: {
+      type: Boolean,
+      default: false
     }
   },
   {

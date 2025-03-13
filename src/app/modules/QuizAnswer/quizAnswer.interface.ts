@@ -2,17 +2,16 @@ import { Types } from "mongoose";
 
 
 export interface IQuizAnswer {
-    gameSessionId: Types.ObjectId;
     userId: Types.ObjectId;
     quizId: Types.ObjectId;
     selectedOption: string;
     isCorrect: boolean;
     responseTime: number; //seconds
+    review: boolean
 }
 
 
 export interface ISubmitAnswer {
-    gameSessionId: Types.ObjectId;
     quizId: Types.ObjectId;
     selectedOption: string;
     responseTime: number;

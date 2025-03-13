@@ -15,7 +15,7 @@ const submitQuizAnswerService = async (
 ) => {
 
 
-  const { gameSessionId, quizId, selectedOption, responseTime} = payload;
+  const { quizId, selectedOption, responseTime} = payload;
 
 
   const quiz = await QuizModel.findById(quizId);
@@ -25,7 +25,6 @@ const submitQuizAnswerService = async (
 
   //check gameSession doesn't exist
   const gameSession = await GameSessionModel.findOne({
-    _id: gameSessionId,
     players: { $in: [loginUserId] },
   });
 

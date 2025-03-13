@@ -23,7 +23,7 @@ const reviewSchema = new Schema<IReview>({
 })
 
 
-const ReviewModel = model('ReviewMode', reviewSchema);
+const ReviewModel = model('Review', reviewSchema);
 export default ReviewModel;
 
 
